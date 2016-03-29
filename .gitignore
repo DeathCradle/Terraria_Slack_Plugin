@@ -1,3 +1,12 @@
+bin/
+obj/
+packages/
+.vs/
+SlackPlugin/bin/
+SlackPlugin/obj/
+SlackPluginTest/bin/
+SlackPluginTest/obj/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

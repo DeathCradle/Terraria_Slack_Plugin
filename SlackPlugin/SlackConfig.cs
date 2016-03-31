@@ -2,7 +2,7 @@
 
 namespace SlackPlugin
 {
-    public class SlackConfig : ComponentConfiguration<SlackConfig>
+    public class SlackConfig : ComponentConfiguration
     {
         [ConfigPrefix("slack-channel")]
         public string Channel { get; set; }

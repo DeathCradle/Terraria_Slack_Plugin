@@ -81,6 +81,7 @@ namespace SlackPlugin
         [HttpPost]
         public IHttpActionResult Post(SlackMessage obj)
         {
+            int count = 0;
             if (obj != null && obj.token == SlackPlugin.Config.WebHookToken)
             {
                 if (!String.IsNullOrEmpty(obj.text))
@@ -93,12 +94,16 @@ namespace SlackPlugin
                             obj.text = obj.text.Remove(0, ix + obj.trigger_word.Length).Trim();
                         }
                     }
-                    OTA.Tools.NotifyAllPlayers(SlackPlugin.Config.ChatPrefix + obj.text, Microsoft.Xna.Framework.Color.Orange, false);
+                    count = OTA.Tools.NotifyAllPlayers(SlackPlugin.Config.ChatPrefix.Replace("{username}", obj.user_name) + obj.text, Microsoft.Xna.Framework.Color.Orange, false);
                     Log.Log(obj.text);
                 }
             }
 
-            return Ok();
+            var suffix = count > 1 ? "s" : String.Empty;
+            return Ok(new
+            {
+                text = $"Sent to {count} player{suffix}"
+            });
         }
     }
 

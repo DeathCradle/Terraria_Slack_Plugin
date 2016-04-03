@@ -7,7 +7,6 @@ using OTA.Logging;
 [assembly: PluginDependency("TDSM.Core")]
 namespace SlackPlugin
 {
-
     [OTAVersion(1, 0)]
     public class SlackPlugin : BasePlugin
     {
@@ -99,7 +98,7 @@ namespace SlackPlugin
                 }
             }
 
-            var suffix = count > 1 ? "s" : String.Empty;
+            var suffix = count != 1 ? "s" : String.Empty;
             return Ok(new
             {
                 text = $"Sent to {count} player{suffix}"
@@ -128,6 +127,5 @@ namespace SlackPlugin
         public string text { get; set; }
 
         public string trigger_word { get; set; }
-
     }
 }

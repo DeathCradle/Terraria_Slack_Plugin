@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Net;
+﻿using Newtonsoft.Json;
+using SlackPlugin.Messages;
+using System;
 using System.Collections.Specialized;
+using System.Net;
+using System.Text;
 
-namespace SlackPlugin {
-	public class SlackClient {
+namespace SlackPlugin
+{
+    public class SlackClient
+    {
+        private Uri _webhookUrl { get; set; }
 
-        private Encoding _encoding = new UTF8Encoding();
-
-        public Uri webHookUrl { get; set; }
-
-        public SlackClient() {
-
+        public SlackClient(string webhookUrl)
+        {
+            _webhookUrl = new Uri(webhookUrl);
         }
 
-		public SlackClient (string webhook){
-            webHookUrl = new Uri(webhook);
-	    }
+        public void SendMessage(string text)
+        {
+            SendMessage(text, SlackPlugin.Config.UserName, SlackPlugin.Config.Channel, SlackPlugin.Config.IconEmoji);
+        }
 
-        public void SendMessage(string text, string username, string channel, string icon_emoji) {
-            var payload = new Payload {
+        public void SendMessage(string text, string username, string channel, string icon_emoji)
+        {
+            var payload = new OutgoingMessage
+            {
                 Channel = channel,
                 UserName = username,
                 Text = text,
@@ -31,29 +32,15 @@ namespace SlackPlugin {
             };
 
             string json = JsonConvert.SerializeObject(payload);
-            using (var client = new WebClient()) {
+            using (var client = new WebClient())
+            {
                 var data = new NameValueCollection();
                 data["payload"] = json;
-                var response = client.UploadValues(webHookUrl, "POST", data);
-                string responseText = _encoding.GetString(response);
+                var response = client.UploadValues(_webhookUrl, "POST", data);
+                string responseText = UTF8Encoding.Default.GetString(response);
 
                 //do we care about response??
             }
         }
-	}
-
-    public class Payload {
-
-        [JsonProperty("channel")]
-        public string Channel { get; set; }
-
-        [JsonProperty("username")]
-        public string UserName { get; set; }
-
-        [JsonProperty("text")]
-        public string Text { get; set; }
-
-        [JsonProperty("icon_emoji")]
-        public string IconEmoji { get; set; }
     }
 }

@@ -16,10 +16,13 @@ namespace SlackPlugin
         [ConfigPrefix("slack-icon-emoji")]
         public string IconEmoji { get; set; }
 
-        [ConfigPrefix("slack-webhook-token")]
+        [ConfigPrefix("slack-webhook-tokens")]
         public string WebHookToken { get; set; }
 
         [ConfigPrefix("slack-chat-prefix")]
         public string ChatPrefix { get; set; }
+
+        [ConfigPrefix("slack-chat-exec-names")]
+        public string ExecAccessName { get; set; }
     }
 }

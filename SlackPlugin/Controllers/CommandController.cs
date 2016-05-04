@@ -20,40 +20,41 @@ namespace SlackPlugin.Controllers
             if (obj != null && obj.IsValid())
             {
                 SlackPlugin.Log.Log($"Slack user {obj.user_name} issued: {obj.MessageText}");
-                var sender = new SlackSender(obj.user_name);
-
-                try
+                using (var sender = new SlackSender(obj.user_name))
                 {
-                    //Check slack user
-                    if (!String.IsNullOrWhiteSpace(SlackPlugin.Config.ExecAccessName) && SlackPlugin.Config.ExecAccessName.Split(',').Contains(obj.user_name))
+                    try
                     {
-                        if (!OTA.Commands.CommandManager.Parser.ParseAndProcess(sender, obj.MessageText))
+                        //Check slack user
+                        if (!String.IsNullOrWhiteSpace(SlackPlugin.Config.ExecAccessName) && SlackPlugin.Config.ExecAccessName.Split(',').Contains(obj.user_name))
                         {
-                            return Ok(new
+                            if (!OTA.Commands.CommandManager.Parser.ParseAndProcess(sender, obj.MessageText))
                             {
-                                text = "Invalid command."
+                                return Ok(new
+                                {
+                                    text = sender.Text + "\nInvalid command."
+                                });
+                            }
+                            else return Ok(new
+                            {
+                                text = sender.Text + "\nCommand executed."
                             });
                         }
                         else return Ok(new
                         {
-                            text = "Command executed."
+                            text = sender.Text + "\nRequest denied."
                         });
                     }
-                    else return Ok(new
+                    catch (OTA.Misc.ExitException)
                     {
-                        text = "Request denied."
-                    });
-                }
-                catch (OTA.Misc.ExitException)
-                {
-                }
-                catch (Exception e)
-                {
-                    SlackPlugin.Log.Log(e, "Slack command failed: " + obj.MessageText);
-                    return Ok(new
+                    }
+                    catch (Exception e)
                     {
-                        text = $"Exception from {obj.MessageText}: {e.ToString()}"
-                    });
+                        SlackPlugin.Log.Log(e, "Slack command failed: " + obj.MessageText);
+                        return Ok(new
+                        {
+                            text = sender.Text + $"\nException from {obj.MessageText}: {e.ToString()}"
+                        });
+                    }
                 }
             }
 

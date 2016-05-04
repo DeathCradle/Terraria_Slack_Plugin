@@ -24,7 +24,7 @@ namespace SlackPlugin.Controllers
         */
         [HttpPost]
         [Route("api/slack/broadcast")]
-        public IHttpActionResult Broadcast(IncomingMessage obj)
+        public IHttpActionResult Broadcast(TriggerWord obj)
         {
             if (obj != null && obj.IsValid())
             {

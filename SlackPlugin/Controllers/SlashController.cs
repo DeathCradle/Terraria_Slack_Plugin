@@ -5,15 +5,15 @@ using System.Web.Http;
 
 namespace SlackPlugin.Controllers
 {
-    public partial class SlackController : ApiController
+    public partial class SlashController : ApiController
     {
         [HttpPost]
-        [Route("api/slack/command")]
-        public IHttpActionResult Command(TriggerWord obj)
+        [Route("api/slack/slash")]
+        public IHttpActionResult Command(SlashCommand obj)
         {
             if (obj != null && obj.IsValid())
             {
-                SlackPlugin.Log.Log($"Slack user {obj.user_name} issued: {obj.MessageText}");
+                SlackPlugin.Log.Log($"Slack user {obj.user_name} issued: {obj.text}");
                 var sender = new SlackSender(obj.user_name);
 
                 try
@@ -21,7 +21,7 @@ namespace SlackPlugin.Controllers
                     //Check slack user
                     if (!String.IsNullOrWhiteSpace(SlackPlugin.Config.ExecAccessName) && SlackPlugin.Config.ExecAccessName.Split(',').Contains(obj.user_name))
                     {
-                        if (!OTA.Commands.CommandManager.Parser.ParseAndProcess(sender, obj.MessageText))
+                        if (!OTA.Commands.CommandManager.Parser.ParseAndProcess(sender, obj.text))
                         {
                             return Ok(new
                             {
@@ -43,10 +43,10 @@ namespace SlackPlugin.Controllers
                 }
                 catch (Exception e)
                 {
-                    SlackPlugin.Log.Log(e, "Slack command failed: " + obj.MessageText);
+                    SlackPlugin.Log.Log(e, "Slack command failed: " + obj.text);
                     return Ok(new
                     {
-                        text = $"Exception from {obj.MessageText}: {e.ToString()}"
+                        text = $"Exception from {obj.text}: {e.ToString()}"
                     });
                 }
             }

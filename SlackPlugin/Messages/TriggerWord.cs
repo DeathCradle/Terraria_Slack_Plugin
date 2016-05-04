@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SlackPlugin.Messages
 {
-    public class IncomingMessage
+    public class TriggerWord
     {
         public string token { get; set; }
 

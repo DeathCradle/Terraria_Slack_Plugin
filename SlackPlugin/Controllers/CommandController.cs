@@ -9,7 +9,13 @@ namespace SlackPlugin.Controllers
     {
         [HttpPost]
         [Route("api/slack/command")]
-        public IHttpActionResult Command(TriggerWord obj)
+        public IHttpActionResult Command(TriggerWord obj) => ProcessCommand(obj);
+
+        [HttpPost]
+        [Route("api/slack/slash")]
+        public IHttpActionResult Slash(TriggerWord obj) => ProcessCommand(obj);
+
+        public IHttpActionResult ProcessCommand(IncomingMessage obj)
         {
             if (obj != null && obj.IsValid())
             {

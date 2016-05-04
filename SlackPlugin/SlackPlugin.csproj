@@ -78,8 +78,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\SlashController.cs" />
     <Compile Include="Controllers\CommandController.cs" />
+    <Compile Include="Messages\IncomingMessage.cs" />
     <Compile Include="Messages\OutgoingMessage.cs" />
     <Compile Include="Messages\SlashCommand.cs" />
     <Compile Include="SlackClient.cs" />

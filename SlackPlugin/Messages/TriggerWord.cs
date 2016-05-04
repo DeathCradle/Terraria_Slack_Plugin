@@ -4,23 +4,9 @@ using System.Linq;
 
 namespace SlackPlugin.Messages
 {
-    public class TriggerWord
+    public class TriggerWord : IncomingMessage
     {
-        public string token { get; set; }
-
-        public string team_id { get; set; }
-
-        public string team_domain { get; set; }
-
-        public string channel_id { get; set; }
-
-        public string channel_name { get; set; }
-
         public string timestamp { get; set; }
-
-        public string user_id { get; set; }
-
-        public string user_name { get; set; }
 
         public string text { get; set; }
 
@@ -28,7 +14,7 @@ namespace SlackPlugin.Messages
 
         private string _messageText;
         [JsonIgnore]
-        public string MessageText
+        public override string MessageText
         {
             get
             {
@@ -48,7 +34,7 @@ namespace SlackPlugin.Messages
             }
         }
 
-        public bool IsValid()
+        public override bool IsValid()
         {
             return SlackPlugin.Config.WebHookToken.Split(',').Contains(token) && !String.IsNullOrWhiteSpace(MessageText) && !String.IsNullOrWhiteSpace(user_name);
         }
